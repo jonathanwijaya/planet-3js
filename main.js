@@ -7,14 +7,16 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls';
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 30000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 30000);
 const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#bg'),
 })
 
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
-camera.position.setZ(30);
+camera.position.setZ(300);
+camera.position.setY(250);
+camera.position.setX(100);
 renderer.render(scene, camera);
 
 const pointLight = new THREE.PointLight(0xffffff);
