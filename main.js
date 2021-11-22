@@ -3,6 +3,7 @@ import './style.css'
 import * as THREE from 'three';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { earthRev, earthToSun, jupRev, jupToSun, marsRev, marsToSun, mercRev, mercToSun, nepRev, nepToSun, satRev, satToSun, uraRev, uraToSun, venRev, venToSun } from './distanceToSun';
 
 // import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls';
 
@@ -26,9 +27,9 @@ const ambientLight = new THREE.AmbientLight(0xfffffff);
 scene.add(pointLight, ambientLight);
 
 const lightHelper = new THREE.PointLightHelper(pointLight);
-// const gridHelper = new THREE.GridHelper(1000, 100);
-// scene.add(lightHelper, gridHelper);
-scene.add(lightHelper);
+const gridHelper = new THREE.GridHelper(10000, 100);
+scene.add(lightHelper, gridHelper);
+// scene.add(lightHelper);
 
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -58,7 +59,6 @@ const sun = new THREE.Mesh(
   })
 );
 
-
 scene.add(sun);
 
 const mercuryTexture = new THREE.TextureLoader().load('mercury.jpg');
@@ -87,6 +87,83 @@ venus.position.set(0, 0, 102);
 
 scene.add(venus);
 
+const earthTexture = new THREE.TextureLoader().load('earth.jpg');
+
+const earth = new THREE.Mesh(
+  new THREE.SphereGeometry(3, 12, 12),
+  new THREE.MeshStandardMaterial({
+    map: earthTexture
+  })
+);
+
+earth.position.set(0, 0, 102);
+
+scene.add(earth);
+
+const marsTexture = new THREE.TextureLoader().load('mars.jpg');
+
+const mars = new THREE.Mesh(
+  new THREE.SphereGeometry(50, 300, 20),
+  new THREE.MeshStandardMaterial({
+    map: marsTexture
+  })
+);
+
+mars.position.set(0, 0, 102);
+
+scene.add(mars);
+
+const jupiterTexture = new THREE.TextureLoader().load('jupiter.jpg');
+
+const jupiter = new THREE.Mesh(
+  new THREE.SphereGeometry(50, 300, 20),
+  new THREE.MeshStandardMaterial({
+    map: jupiterTexture
+  })
+);
+
+jupiter.position.set(0, 0, 102);
+
+scene.add(jupiter);
+
+const saturnTexture = new THREE.TextureLoader().load('saturn.jpg');
+
+const saturn = new THREE.Mesh(
+  new THREE.SphereGeometry(50, 300, 20),
+  new THREE.MeshStandardMaterial({
+    map: saturnTexture
+  })
+);
+
+saturn.position.set(0, 0, 102);
+
+scene.add(saturn);
+
+const uranusTexture = new THREE.TextureLoader().load('uranus.jpg');
+
+const uranus = new THREE.Mesh(
+  new THREE.SphereGeometry(50, 300, 20),
+  new THREE.MeshStandardMaterial({
+    map: uranusTexture
+  })
+);
+
+uranus.position.set(0, 0, 102);
+
+scene.add(uranus);
+
+const neptuneTexture = new THREE.TextureLoader().load('neptune.jpg');
+
+const neptune = new THREE.Mesh(
+  new THREE.SphereGeometry(50, 300, 20),
+  new THREE.MeshStandardMaterial({
+    map: neptuneTexture
+  })
+);
+
+neptune.position.set(0, 0, 102);
+
+scene.add(neptune);
 
 // const moonTexture = new THREE.TextureLoader().load('moon.jpg');
 
@@ -106,21 +183,57 @@ scene.add(venus);
 //   controls.moveForward;
 // }
 
+function calculateDistanceAndRevoSin(revolution, distance) {
+  return Math.sin(Date.now() * revolution) * distance;
+}
+
+function calculateDistanceAndRevoCos(revolution, distance) {
+  return Math.cos(Date.now() * revolution) * distance;
+}
+
 function animate() {
   requestAnimationFrame(animate);
 
-  sun.rotation.x += 0.0001;
-  sun.rotation.y += 0.0001;
+  sun.rotation.x += 0.001;
+  sun.rotation.y += 0.001;
 
-  mercury.rotation.y = Date.now() * -0.0001;
-  mercury.position.x = Math.sin(Date.now() * 0.001) * 219.15;
-  mercury.position.z = Math.cos(Date.now() * 0.001) * 219.15;
+  var mercuryRevolution = 0.0001;
+  var mercuryDistance = 219.15;
 
-  venus.rotation.y = Date.now() * -0.0001;
-  venus.position.x = Math.sin(Date.now() * 0.001) * 300;
-  venus.position.z = Math.cos(Date.now() * 0.001) * 300;
+  var mercuryX = calculateDistanceAndRevoSin(mercuryRevolution, mercuryDistance);
+  var mercuryZ = calculateDistanceAndRevoCos(mercuryRevolution, mercuryDistance);
 
-  // document.addEventListener("mousedown", zoomIn);
+  mercury.rotation.y = Date.now() * -0.00001; // 88 days
+  mercury.position.x = mercuryX; // 88 days
+  mercury.position.z = mercuryZ; // 88 days
+
+  venus.rotation.y = Date.now() * -0.00001;
+  venus.position.x = calculateDistanceAndRevoSin(((mercRev / venRev) * mercuryRevolution), ((venToSun / mercToSun) * mercuryDistance));
+  venus.position.z = calculateDistanceAndRevoCos(((mercRev / venRev) * mercuryRevolution), ((venToSun / mercToSun) * mercuryDistance));
+
+  earth.rotation.y = Date.now() * -0.00001;
+  earth.position.x = calculateDistanceAndRevoSin(((mercRev / earthRev) * mercuryRevolution), ((earthToSun / mercToSun) * mercuryDistance));
+  earth.position.z = calculateDistanceAndRevoCos(((mercRev / earthRev) * mercuryRevolution), ((earthToSun / mercToSun) * mercuryDistance));
+
+  mars.rotation.y = Date.now() * -0.00001;
+  mars.position.x = calculateDistanceAndRevoSin(((mercRev / marsRev) * mercuryRevolution), ((marsToSun / mercToSun) * mercuryDistance));
+  mars.position.z = calculateDistanceAndRevoCos(((mercRev / marsRev) * mercuryRevolution), ((marsToSun / mercToSun) * mercuryDistance));
+
+  jupiter.rotation.y = Date.now() * -0.00001;
+  jupiter.position.x = calculateDistanceAndRevoSin(((mercRev / jupRev) * mercuryRevolution), ((jupToSun / mercToSun) * mercuryDistance));
+  jupiter.position.z = calculateDistanceAndRevoCos(((mercRev / jupRev) * mercuryRevolution), ((jupToSun / mercToSun) * mercuryDistance));
+
+  saturn.rotation.y = Date.now() * -0.00001;
+  saturn.position.x = calculateDistanceAndRevoSin(((mercRev / satRev) * mercuryRevolution), ((satToSun / mercToSun) * mercuryDistance));
+  saturn.position.z = calculateDistanceAndRevoCos(((mercRev / satRev) * mercuryRevolution), ((satToSun / mercToSun) * mercuryDistance));
+
+  uranus.rotation.y = Date.now() * -0.00001;
+  uranus.position.x = calculateDistanceAndRevoSin(((mercRev / uraRev) * mercuryRevolution), ((uraToSun / mercToSun) * mercuryDistance));
+  uranus.position.z = calculateDistanceAndRevoCos(((mercRev / uraRev) * mercuryRevolution), ((uraToSun / mercToSun) * mercuryDistance));
+
+  neptune.rotation.y = Date.now() * -0.00001;
+  neptune.position.x = calculateDistanceAndRevoSin(((mercRev / nepRev) * mercuryRevolution), ((nepToSun / mercToSun) * mercuryDistance));
+  neptune.position.z = calculateDistanceAndRevoCos(((mercRev / nepRev) * mercuryRevolution), ((nepToSun / mercToSun) * mercuryDistance));
 
   controls.update;
 
