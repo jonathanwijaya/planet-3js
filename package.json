@@ -5,10 +5,10 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "deploy" : "sh deploy.sh"
+    "deploy": "sh deploy.sh"
   },
   "devDependencies": {
-    "vite": "^2.6.4"
+    "vite": "^2.8.2"
   },
   "dependencies": {
     "three": "^0.134.0"
